@@ -3,7 +3,7 @@ import React from 'react';
 class Card extends React.Component {
     render() {
         return(
-            <p>Card Placeholder<p>
+            <p>{this.props.inPlay.value}</p>
         );
     }
 }
