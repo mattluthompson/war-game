@@ -7,7 +7,7 @@ class Deck extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            userName: 'Matt',
+            userName: '',
             cards: [
                 {value: "2", rank: 1, alreadyPlayed: false},
                 {value: "2", rank: 1, alreadyPlayed: false},
@@ -79,6 +79,8 @@ class Deck extends React.Component {
         this.dealDeck = this.dealDeck.bind(this);
         this.enterName = this.enterName.bind(this);
         this.flipCard = this.flipCard.bind(this);
+        this.shuffleUserHand = this.shuffleUserHand.bind(this);
+        this.shuffleCompHand = this.shuffleCompHand.bind(this);
     }
 
     //this method shuffles the deck (game can't start until deck is shuffled)
@@ -137,6 +139,8 @@ class Deck extends React.Component {
     flipCard(e) {
         const userCard = this.state.userDeck[0];
         const compCard = this.state.compDeck[0];
+
+
         let cardArray = [];
 
         userCard.alreadyPlayed = true;
@@ -149,6 +153,7 @@ class Deck extends React.Component {
 
         const newUserDeck = this.state.userDeck.slice(1, this.state.userDeck.length);
         const newCompDeck = this.state.compDeck.slice(1, this.state.compDeck.length);
+
 
         //if user wins
         if(userCard.rank>compCard.rank){
@@ -183,17 +188,49 @@ class Deck extends React.Component {
             })
         }
 
-        if(this.state.userDeck[0].alreadyPlayed === true) {
-            this.shufflePlayerHand(this.state.userDeck);
+        if(newUserDeck[0].alreadyPlayed) {
+            
+            this.shuffleUserHand();
         }
 
-        if(this.state.compDeck[0].alreadyPlayed === true) {
-            this.shufflePlayerHand(this.state.compDeck);
+        if(newCompDeck[0].alreadyPlayed) {
+            this.shuffleCompHand();
         }
     }
 
-    shufflePlayerHand(arr){
-        alert(arr);
+    shuffleUserHand(){
+        const deckToShuffle = this.state.userDeck.slice()
+
+        for(let i = this.state.userDeck.length-1; i > 0; i--){ //https://medium.com/@nitinpatel_20236/how-to-shuffle-correctly-shuffle-an-array-in-javascript-15ea3f84bfb
+            const j = Math.floor(Math.random() * i)
+            const temp = deckToShuffle[i]
+            deckToShuffle[i] = deckToShuffle[j]
+            deckToShuffle[j] = temp
+            deckToShuffle[i].alreadyPlayed = false
+        }
+
+        this.setState({
+            userDeck: deckToShuffle
+        })
+        alert('your hand was shuffled')
+    }
+
+    shuffleCompHand(){
+        const deckToShuffle = this.state.compDeck.slice()
+
+        for(let i = this.state.userDeck.length-1; i > 0; i--){ //https://medium.com/@nitinpatel_20236/how-to-shuffle-correctly-shuffle-an-array-in-javascript-15ea3f84bfb
+            const j = Math.floor(Math.random() * i)
+            const temp = deckToShuffle[i]
+            deckToShuffle[i] = deckToShuffle[j]
+            deckToShuffle[j] = temp
+            deckToShuffle[i].alreadyPlayed = false
+        }
+
+        this.setState({
+            compDeck: deckToShuffle
+        })
+
+        alert('comp\'s hand was shuffled')
     }
 
     render() {
